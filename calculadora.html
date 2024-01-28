@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .calculator {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: 0.2s;
+            transition: opacity 0.2s;
+        }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        #selectedAmount {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        #results p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        #results p strong {
+            color: #333;
+        }
+
+        #results p:first-child {
+            margin-top: 0;
+        }
+    </style>
+    <title>Calculadora de Energia Solar</title>
+</head>
+<body>
+    <div class="calculator">
+        <label for="billAmount">Qual o valor médio da sua conta de luz?</label>
+        <input type="range" id="billAmount" min="300" max="5000" step="100" value="300">
+        <p id="selectedAmount">R$300,00</p>
+
+        <div id="results">
+            <p id="result-co2"></p>
+            <p id="result-trees"></p>
+            <p id="result-economy"></p>
+        </div>
+
+        <script>
+            // Função para formatar números em moeda
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+            }
+
+            // Função para calcular os resultados
+            function calculateResults() {
+                const billAmount = document.getElementById('billAmount').value;
+                const co2 = billAmount * 0.005467; // Fator de conversão para CO2
+                const trees = billAmount * 0.039533; // Fator de conversão para árvores
+                const economy = billAmount * 1.8; // Economia estimada
+
+                document.getElementById('result-co2').innerText = `${co2.toFixed(2)} Kg de CO2 retirados por ano`;
+                document.getElementById('result-trees').innerText = `${trees.toFixed(2)} de árvores preservadas por ano`;
+                document.getElementById('result-economy').innerText = `Em um ano sua economia será de: ${formatCurrency(economy)}`;
+            }
+
+            // Atualiza o valor selecionado na barra
+            function updateSelectedAmount() {
+                const selectedAmount = document.getElementById('billAmount').value;
+                document.getElementById('selectedAmount').innerText = `R$${selectedAmount},00`;
+            }
+
+            // Adiciona listeners para atualização dinâmica
+            document.getElementById('billAmount').addEventListener('input', () => {
+                updateSelectedAmount();
+                calculateResults();
+            });
+
+            // Inicializa os resultados
+            updateSelectedAmount();
+            calculateResults();
+        </script>
+    </div>
+</body>
+</html>
